@@ -1,0 +1,20 @@
+#board {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+#board > div {
+  display: flex;
+  gap: 0;
+}
+
+.square {
+    height: 100px;
+    width: 100px;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+    background-color: transparent;
+
+}
