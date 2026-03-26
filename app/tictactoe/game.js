@@ -1,5 +1,4 @@
 "use client";
-import "../global.css";
 import PlayerState from "./playerState";
 import Board from "./board";
 import { useState } from "react";
@@ -10,7 +9,7 @@ export default function Game() {
   const [gameState, SetGameState] = useState("Started");
 
   function changeSymbolTurn(index) {
-    if (board[index] != "") {
+    if (board[index] != "" || gameState == "Winner") {
       return;
     }
 
@@ -23,13 +22,60 @@ export default function Game() {
     } else if (turn == "O") {
       setTurn("X");
     }
+
+    calculateWinner(nextSquare);
   }
 
-  function calculateWinner(board) {
-    if (board.includes("") !== false) {
-      //its full (a tie or someone won)
+  function checkWin(nextBoard) {
+    for (let i = 0; i < 7; i += 3) {
+      if (
+        nextBoard[i] === nextBoard[i + 1] &&
+        nextBoard[i + 1] === nextBoard[i + 2] &&
+        nextBoard[i + 2] !== ""
+      ) {
+        return nextBoard[i];
+      }
+    }
+
+    for (let i = 0; i < 3; i += 1) {
+      if (
+        nextBoard[i] === nextBoard[i + 3] &&
+        nextBoard[i + 3] === nextBoard[i + 6] &&
+        nextBoard[i + 6] !== ""
+      ) {
+        return nextBoard[i];
+      }
+    }
+
+    if (
+      nextBoard[0] === nextBoard[4] &&
+      nextBoard[4] === nextBoard[8] &&
+      nextBoard[8] !== ""
+    ) {
+      return nextBoard[0];
+    }
+
+    if (
+      nextBoard[2] === nextBoard[4] &&
+      nextBoard[4] === nextBoard[6] &&
+      nextBoard[6] !== ""
+    ) {
+      return nextBoard[2];
+    }
+    return "";
+  }
+
+  function calculateWinner(nextBoard) {
+    if (nextBoard.includes("") === false) {
+      if (checkWin(nextBoard) === "") {
+        SetGameState("Tie");
+      } else {
+        SetGameState("Winner");
+      }
     } else {
-      //someone won or the game continues
+      if (checkWin(nextBoard) !== "") {
+        SetGameState("Winner");
+      }
     }
   }
 
